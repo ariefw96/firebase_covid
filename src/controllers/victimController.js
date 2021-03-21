@@ -152,5 +152,48 @@ module.exports = {
             }).catch((error) => {
                 res.status(500).json(error)
             })
+    },
+    getSingleVictim: (req, res) => {
+        const { id } = req.params
+        victimModel.getSingle(id)
+            .then((result) => {
+                const id = result.id
+                const Victim = {
+                    id,
+                    ...result.data()
+                }
+                res.status(200).json({
+                    status: 200,
+                    message: 'Berhasil mendapatkan data',
+                    content: Victim
+                })
+            }).catch((error) => {
+                res.status(500).json(error)
+            })
+    },
+    countDataByRegion: (req, res) => {
+        const { id } = req.params
+        let countData = []
+        victimModel.listVictimByRegion(id)
+            .then((result) => {
+                result.forEach((data) => {
+                    const id = data.id
+                    const Victim = {
+                        id,
+                        ...data.data()
+                    }
+                    countData.push(Victim)
+                })
+                res.status(200).json({
+                    status:200,
+                    message:'berhasil mendapatkan data',
+                    content:{
+                        region:id,
+                        count:countData.length
+                    }
+                })
+            }).catch((error) => {
+                res.status(500).json(error)
+            })
     }
 }

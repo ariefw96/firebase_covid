@@ -24,5 +24,9 @@ module.exports = {
     },
     deleteVictim: (id) => {
         return db.collection('tb_victim').doc(id).delete()
-    }
+    },
+    getSingle: (id) =>{
+        return db.collection('tb_victim').doc(id).get()
+    },
+
 }

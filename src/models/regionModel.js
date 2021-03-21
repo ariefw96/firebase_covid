@@ -10,5 +10,5 @@ module.exports = {
     },
     add: (body) =>{
         return db.collection('tb_region').add(body)
-    }
+    },
 }
