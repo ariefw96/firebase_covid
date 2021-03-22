@@ -28,5 +28,8 @@ module.exports = {
     getSingle: (id) =>{
         return db.collection('tb_victim').doc(id).get()
     },
+    getRegion: () =>{
+        return db.collection('tb_region').get()
+    },
 
 }

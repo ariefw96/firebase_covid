@@ -1,3 +1,4 @@
+const victimRouter = require('../routes/victimRouter')
 const victimModel = require('./../models/victimModel')
 
 module.exports = {
@@ -172,26 +173,50 @@ module.exports = {
             })
     },
     countDataByRegion: (req, res) => {
-        const { id } = req.params
-        let countData = []
-        victimModel.listVictimByRegion(id)
+        let listRegion = []
+        let dataRegion = []
+        let dataCount = []
+        victimModel.getRegion()
             .then((result) => {
                 result.forEach((data) => {
                     const id = data.id
-                    const Victim = {
+                    const Region = {
                         id,
                         ...data.data()
                     }
-                    countData.push(Victim)
+                    listRegion.push(Region)
                 })
-                res.status(200).json({
-                    status:200,
-                    message:'berhasil mendapatkan data',
-                    content:{
-                        region:id,
-                        count:countData.length
-                    }
+                listRegion.map(({ region }) => {
+                    let countData = []
+                    victimModel.listVictimByRegion(region)
+                        .then((result) => {
+                            result.forEach((data) => {
+                                const id = data.id
+                                const counter = {
+                                    id,
+                                    ...data.data()
+                                }
+                                countData.push(counter)
+                            })
+                            dataRegion.push(region)
+                            dataCount.push(countData.length)
+                            if (listRegion.length == dataCount.length) {
+                                res.status(200).json({
+                                    status: 200,
+                                    message: 'Sukses',
+                                    content: {
+                                        region: dataRegion,
+                                        victimCount: dataCount
+                                    }
+                                })
+                            }
+                        }).catch((error) => {
+                            console.log(error)
+                        })
                 })
+                // console.log('data Region', dataRegion)
+                // console.log('count', dataCount)
+
             }).catch((error) => {
                 res.status(500).json(error)
             })
